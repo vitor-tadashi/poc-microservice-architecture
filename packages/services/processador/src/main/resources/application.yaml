@@ -1,0 +1,6 @@
+server:
+   port: 9000
+spring:
+   kafka:           
+      bootstrap-servers: localhost:9091
+      group-id: processador-ativo

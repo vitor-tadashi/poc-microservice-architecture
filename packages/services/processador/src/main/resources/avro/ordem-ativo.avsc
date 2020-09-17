@@ -1,0 +1,19 @@
+{
+  "fields": [
+    {
+      "name": "ativo",
+      "type": "string"
+    },
+    {
+      "name": "quantidade",
+      "type": "long"
+    },
+    {
+      "name": "token",
+      "type": "string"
+    }
+  ],
+  "name": "OrdemAtivo",
+  "namespace": "com.pricinghub.processador.schema",
+  "type": "record"
+}
