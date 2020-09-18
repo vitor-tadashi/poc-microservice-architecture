@@ -46,6 +46,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
-  redis:
-    image: redis
-    restart: always
+  processador:
+    build: ./packages/services/processador
+    links:
+      - 'kafka:kafka'
+  
+  precificador:
+    build: ./packages/services/precificador
+    links:
+      - 'kafka:kafka'
