@@ -34,18 +34,26 @@ services:
       KAFKA_REST_BOOTSTRAP_SERVERS: "kafka:29091"
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
   
-  postgres:
-    build: ./packages/services/postgres
-    ports:
-      - 5432:5432
-
   mongo:
     image: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-
+  
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'development'
+      POSTGRES_USER: 'developer'
+      POSTGRES_DB: 'agendamento'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
   processador:
     build: ./packages/services/processador
     links:
@@ -55,3 +63,14 @@ services:
     build: ./packages/services/precificador
     links:
       - 'kafka:kafka'
+  
+  agendador:
+    build: ./packages/services/agendador
+    links:
+      - 'kafka:kafka'
+      - 'postgres:postgres'
+    command: ["./scripts/wait-for-postgres.sh", "db", "python", "app.py"]
+
+volumes:
+  postgres-data:
+    driver: local
