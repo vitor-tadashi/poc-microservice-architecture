@@ -20,3 +20,5 @@ curl \
 
 docker-compose down -v
 
+Instalar o aws cli
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html

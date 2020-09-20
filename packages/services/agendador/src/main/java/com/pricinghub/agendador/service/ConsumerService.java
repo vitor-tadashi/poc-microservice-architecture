@@ -19,7 +19,7 @@ public class ConsumerService {
 	@Autowired
 	private OrdemPrecificadaDataAccess ordemPrecificadaDataAccess;
 
-	@KafkaListener(topics = "ordem-ativo-precificado", groupId = "agendador-ordem", containerFactory = "listenerContainerFactory")
+	@KafkaListener(topics = "ordem-ativo-precificado", groupId = "agendador-ativo", containerFactory = "listenerContainerFactory")
 	public void processarOrdemAtivo(OrdemAtivo ordemAtivo) throws IOException {
 		logger.info(String.format("#### -> Consumed message -> %s", ordemAtivo.toString()));
 		ordemPrecificadaDataAccess.inserir(ordemAtivo);

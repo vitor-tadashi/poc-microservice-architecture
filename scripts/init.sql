@@ -12,4 +12,14 @@ BEGIN;
         total DOUBLE PRECISION not null,
         created_at timestamp with time zone default now() not null
     );
+
+    create table volume_cliente
+    (
+        id serial not null
+            constraint id_volume_cliente_pkey
+            primary key,
+        token varchar(100) not null,
+        volume DOUBLE PRECISION not null,
+        created_at date not null default CURRENT_DATE
+    );
 COMMIT;

@@ -34,13 +34,6 @@ services:
       KAFKA_REST_BOOTSTRAP_SERVERS: "kafka:29091"
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
   
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-  
   postgres:
     image: postgres:latest
     restart: always
@@ -70,6 +63,18 @@ services:
       - 'kafka:kafka'
       - 'postgres:postgres'
     command: ["./scripts/wait-for-postgres.sh", "db", "python", "app.py"]
+
+  financeiro:
+    build: ./packages/services/financeiro
+    links:
+      - 'kafka:kafka'
+      - 'postgres:postgres'
+    command: ["./scripts/wait-for-postgres.sh", "db", "python", "app.py"]
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
 
 volumes:
   postgres-data:
