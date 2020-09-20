@@ -17,8 +17,7 @@ curl \
 -H 'Content-Type: application/vnd.kafka.json.v2+json' \
 -d '{ "records": [ { "value": { "ativo": "B3", "quantidade": 100, "token": "1234456789" } } ]}'
 
+curl http://localhost:8080/clientes/vitor/volume/diario
+
 
 docker-compose down -v
-
-Instalar o aws cli
-https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html

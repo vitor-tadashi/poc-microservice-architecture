@@ -1,0 +1,13 @@
+server:
+  port : 9090
+spring:
+   datasource:
+      platform: postgres
+      url: jdbc:postgresql://postgres:5432/agendamento
+      username: developer
+      password: development
+   jpa:
+      show-sql: true
+      generate-ddl: false
+      hibernate:
+         ddl-auto: none
