@@ -25,7 +25,7 @@ services:
       KAFKA_CREATE_TOPICS: "ordem-ativo:3:1,ordem-ativo-precificar:3:1,ordem-ativo-precificado:3:1"
 
   rest-proxy:
-    build: ./packages/services/rest-proxy
+    image: confluentinc/cp-kafka-rest:5.5.1
     ports:
       - 8082:8082
     links:
