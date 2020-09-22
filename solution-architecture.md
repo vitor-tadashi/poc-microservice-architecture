@@ -100,6 +100,17 @@ Para suprir o problema de observabilidade considerei a implantação do agent Fl
 
 Com Fluentd o programador não precisaria fazer nada, todos os logs das aplicações seriam capturadas por ele que por sua vez seriam enviadas para o ElasticSearch. O Kibana entra como um facilitador para visualizar os logs, criar as métricas e alertas em caso de problemas.
 
+## Schema Registry
+O Schema registry entra não só como uma solução para compatibilidade e validação de schema, mas aumenta o throughput e diminui o armazenamento dos dados em disco.
+
+![Schema Registtry](images/schema-registry.png)
+
+Como é visto na imagem o Producer/Consumer obtêm o schema registrado no schema registry e a partir dai serializam ou deserializam o binário que está guardado no Kafka. 
+
+Um ponto importante é que o Schema fica guardado em cache local após a primeira consulta, o que diminui brutalmente o tempo de resposta para serializar ou deserializar o dado. Isso também é benéfico para o Schema Registry, já que não irá receber requisições a todo momento.
+
+Agora com os dados em binário a velocidade de transferência é muito maior e o dinheiro gasto por armazenamento dos dados diminui.
+
 ## Respondendo as questões do desafio
 
 1. Variação de fluxo de mensagens no tempo, chegando a picos de 10Bi mensagens/dia.
@@ -154,3 +165,13 @@ Com Fluentd o programador não precisaria fazer nada, todos os logs das aplicaç
 7. Tratamento de diferentes modelos de entrada de ordem dado um protocolo único de entrada para o processador.
 
     Resp.: Este problema foi tratado no item `"Envio de ordem de compra de ativo ao processador"`
+
+## Conclusão
+
+A solução dada irá depender fortemente de como o Kafka é configurado e como os tópicos são criados. 
+
+O consumidores devem escalar conforme necessidade e nunca mais que o número de partições de um tópico, pois não faria sentido já que ficariam em `idle`. Caso o número de consumidores não seja suficiente o número de partições deve ser aumentado, lembrando que isso gera um custo maior, pois o Kafka precisa de mais poder de processamento para gerenciar tudo isso.
+
+Em uma solução como essa é muito importante o monitoramento dos serviços e criação de métricas, assim o dinheiro não é disperdiçado e só se criam novos recursos conforme a necessidade. É importante lembrar que o ideal é começar com um número de partições recomendadas (6 a 10 partições) e aumentar conforme a necessidade, já que o Apache Kafka não possui suporte a diminuição de número de partições, pois isso levaria a perda de dados.
+
+O Kafka foi criado exatamente para escalar as aplicações de modo mais eficiente e permitir um altissimo throughput, de brinde temos uma segurança do dados de altíssima qualidade.
