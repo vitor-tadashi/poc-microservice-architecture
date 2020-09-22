@@ -54,7 +54,9 @@ curl \
 -d '{ "records": [ { "value": { "ativo": "B3SA3", "quantidade": 100, "token": "rico" } } ]}'
 ```
 
-Você consegue encontrar os códigos de ativo com código de precificação no arquivo `packages/services/processador/src/main/resources/informacao-cadastral.csv`, ele são carregados sempre que a aplicação é executada. Caso queira alterar o código do ativo altere o atributo `ativo` do payload de sua chamada.
+Você consegue encontrar os códigos de ativo com código de precificação no arquivo `packages/services/processador/src/main/resources/informacao-cadastral.csv` (ATIVO,CODIGOPRECIFICACAO), ele são carregados sempre que a aplicação é executada. Caso queira alterar o código do ativo altere o atributo `ativo` do payload de sua chamada.
+
+É bom citar que a informação cadastral deve estar sincronizada com os dados da precificação que estão localizadas no arquivo `packages/services/precificador/src/main/resources/precificacao-ativo.csv` (ATIVO,CODIGOPRECIFICACAO;VALOR).
 
 O `token` é apenas uma `String` para identificar o cliente, altere para o que for mais conveniente, isso será utilizado no teste de consulta dos valores consolidados por cliente.
 
