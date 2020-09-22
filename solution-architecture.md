@@ -139,7 +139,7 @@ Com Fluentd o programador não precisaria fazer nada, todos os logs das aplicaç
 
 4. Recebimento de mensagens duplicas no agendamento de pedidos.
 
-    Resp.: Para garantir que mensagens duplicadas não sejam deverá ser implementado a pattern "Idempotent Consumer", para isso só dois elementos são necessário, ter uma chave única que identifique a mensagem, no caso a ordem e um repositório idempotente.
+    Resp.: Para garantir que mensagens duplicadas não sejam processadas, deverá ser implementado a pattern "Idempotent Consumer", para isso só dois elementos são necessário, ter uma chave única que identifique a mensagem, e um repositório idempotente (Kafka).
 
     [Mais informações sobre o padrão aqui](https://pradeeploganathan.com/patterns/idempotent-consumer-pattern/) e [aqui](https://microservices.io/patterns/communication-style/idempotent-consumer.html)
 
