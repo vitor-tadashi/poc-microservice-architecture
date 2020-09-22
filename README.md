@@ -1,5 +1,8 @@
 # Desafio técnico B3
 
+## Problema e solução de arquitetura
+O problema proposto pode ser visualizado no arquivo [challenge.md](challenge.md) e a solução proposta pode ser visualizada no arquivo [solution-architecture.md](solution-architecture.md)
+
 ## Pré-requisitos
 Você precisará instalar o [docker-desktop](https://www.docker.com/products/docker-desktop) e o [docker-compose CLI](https://docs.docker.com/compose/install/), todas as aplicações foram configuradas para serem executadas através do docker-compose. 
 
@@ -89,7 +92,7 @@ Vocês conseguirão conferir os dados enviados por vocês diretamente nessas tab
 Os tópico estão sendo criados porque foram configurados no `docker-compose` na variável `KAFKA_CREATE_TOPICS` na linha 25 do arquivo `docker-compose.yml`, mas não realizei muitos testes em volta dessa feature. Então caso os tópicos não forem criados vocês poderão criar os tópicos manualmente.
 
 ### 1. Pré requisito
-Instalar o [kafka cli](https://kafka.apache.org/quickstart) 
+Instalar ou executar diretamente o [kafka cli](https://kafka.apache.org/quickstart) 
 
 ### 2. Criar tópicos
 Comando para criar tópico `ordem-ativo`
@@ -110,7 +113,7 @@ bin/kafka-topics.sh --bootstrap-server "localhost:9091" --create --topic ordem-a
 ```
 
 ## Consumir as mensagens nos tópicos
-Caso você queira monitorar as mensagens que estão sendo enviadas nos tópicos será necessário instalar o [kafka cli](https://kafka.apache.org/quickstart).
+Caso você queira monitorar as mensagens que estão sendo enviadas nos tópicos será necessário instalar ou executar o [kafka cli](https://kafka.apache.org/quickstart).
 
 Para consumir as mensagens enviadas no tópico `ordem-ativo`
 ```
