@@ -16,6 +16,7 @@ O arquivo de configuração se encontra na pasta raiz do repositório.. `docker-
     ├── financeiro (Consumer que irá contabilizar e persistir o volume total diário de ordens de cada cliente)
     ├── precificador (Consumer que irá obter precificar, calcular o total da ordem e enviar o evento de precificado)
     ├── processador (Consumer que irá obter o código de precificação e enviar o evento de precificar)
+├── scripts (script de init db)
 ```
 
 ## Executar o código

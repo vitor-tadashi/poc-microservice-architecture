@@ -100,3 +100,57 @@ Para suprir o problema de observabilidade considerei a implantação do agent Fl
 
 Com Fluentd o programador não precisaria fazer nada, todos os logs das aplicações seriam capturadas por ele que por sua vez seriam enviadas para o ElasticSearch. O Kibana entra como um facilitador para visualizar os logs, criar as métricas e alertas em caso de problemas.
 
+## Respondendo as questões do desafio
+
+1. Variação de fluxo de mensagens no tempo, chegando a picos de 10Bi mensagens/dia.
+
+    Resp.: A arquitetura foi desenvolvida para que não houvessem gargalos em nenhum ponto de negócio. Os load balancers garantem milhões de requests por segundo, que por sua vez seriam recebidas pelo Kafka. 
+    
+    O Kafka estaria armazenando os dados em binário Avro já que na solução estou considerando o Schema registry, o faz melhorar a performance da comunicação, pois não é preciso mais trafegar texto entre Kafka/Consumer/Producer. O Consumer/Producer por sua vez armazena em cache o Schema garantindo a velocidade de transformação do dado.
+
+    Para um maior Throughput devem ser configuradas mais partições, não é recomendado mais que 50 partições por tópico, pois mais partições é igual a mais utilização do CPU. O throughput deveria ser analisado e as partições deveriam ser aumentadas conforme a necessidade. 
+
+    O número máximo de pods do Consumer deve refletir o número de partições, já que não faria sentido ter mais consumer do que partições, pois ficariam em `idle`. Também deve ser configurado o aumento de pods conforme a necessidade de computação e processamento paralelo, existindo uma economia de dinheiro em momentos de baixo tráfego de dados.
+
+    Todos os outros serviços que estão fora do Kubernetes (DynamoDB, ElasticSearch, PostgreSQL, Memcached, Lambda Function) são gerenciados pela AWS e se bem configurados garantem ótima performance.
+
+    Para o DynamoDB seria bom um auto scaling para suprir o `read` e `write` na base de dados. 
+
+    Logo essa arquitetura consegue diminuir e economizar dinheiro em momentos de baixo tráfego e escala bem e rápido em momentos de alto tráfego fazendo com que o throughput seja alto.
+
+2. Garantia de processamento em caso de falha de algum dos componentes.
+
+    Resp.: O processamento é garantido pelo simples fato de estar utilizando o Kafa para armazenar as mensagens que são enviadas pelos Producer.
+
+    Caso um dos componentes de negócio falhe a mensagem ainda estará lá para ser consumida e processada.
+
+    O Kafka ainda oferece viagem no tempo, o que isso quer dizer? Que podemos voltar ao offset da partição que queremos processar em caso de falha em algum ponto ou até mesmo falha de negócio.
+
+    O Kafka se bem configurado me garante replicação dos dados e caso um dos Brokers falhe ele elege outro broker líder.
+
+    [Aqui escrevo um pouco sobre o Kafka e o porque da utilização.](https://www.linkedin.com/pulse/apache-kafka-para-iniciantes-vitor-tadashi/)
+
+3. Como você identifica que alguma componente da solução não está saudável o mais rápido possível na observabilidade da sua solução (caiu, consumo excessivo de memória, apresenta algum log de erro)?
+
+    Resp.: Como coloca lá em cima no item "Monitoramento e Logging" considerei o EFK (ElasticSearch, Fluentd e Kibana) na solução observabilidade da solução. Existem muitas outras soluções boas como Instana, mas considerando um custo baixo fluentd atende muito bem na captura e transformação dos logs de uma forma que fique fácil para os desenvolvedores criarem dashboard com métricas e alertas em caso de emergências.
+
+    O Kubernetes por sua vez irá checar a saúde dos pods garantindo que sempre existam serviços consumidores saudáveis em execução.
+
+
+4. Recebimento de mensagens duplicas no agendamento de pedidos.
+
+    Resp.: Para garantir que mensagens duplicadas não sejam deverá ser implementado a pattern "Idempotent Consumer", para isso só dois elementos são necessário, ter uma chave única que identifique a mensagem, no caso a ordem e um repositório idempotente.
+
+    [Mais informações sobre o padrão aqui](https://pradeeploganathan.com/patterns/idempotent-consumer-pattern/) e [aqui](https://microservices.io/patterns/communication-style/idempotent-consumer.html)
+
+5. Disponibilização do volume financeiro por cliente em near real time.
+
+    Resp.: Como mostra na solução o volume financeiro é calculado assim que a ordem é precificada, não concorrendo com nenhum outro processamento. E sendo disponibilizada pelo DynamoDB e consumida através de uma API. 
+
+6. Alarmes em near real time em janela de tempo
+
+    Resp.: Como mostra na solução o cálculo total do volume financeiro no dia é feito em um processo a parte pelo Lamda assim que a ordem é precificada, não concorrendo com nenhum outro processamento. Assim que o volume atinge o valor configurado a função aciona o SNS que por sua vez irá enviar o SMS para os números cadastrados.
+
+7. Tratamento de diferentes modelos de entrada de ordem dado um protocolo único de entrada para o processador.
+
+    Resp.: Este problema foi tratado no item `"Envio de ordem de compra de ativo ao processador"`
