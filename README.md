@@ -51,7 +51,7 @@ curl \
 -iXPOST 'http://localhost:8082/topics/ordem-ativo' \
 -H 'Accept: application/vnd.kafka.v2+json' \
 -H 'Content-Type: application/vnd.kafka.json.v2+json' \
--d '{ "records": [ { "value": { "ativo": "B3SA3", "quantidade": 100, "token": "rico" } } ]}'
+-d '{ "records": [ { "value": { "ativo": "BBAS3", "quantidade": 100, "token": "rico" } } ]}'
 ```
 
 Você consegue encontrar os códigos de ativo com código de precificação no arquivo `packages/services/processador/src/main/resources/informacao-cadastral.csv` (ATIVO,CODIGOPRECIFICACAO), ele são carregados sempre que a aplicação é executada. Caso queira alterar o código do ativo altere o atributo `ativo` do payload de sua chamada.
