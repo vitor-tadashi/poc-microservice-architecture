@@ -1,12 +1,10 @@
-FROM openjdk:8-jdk-alpine as build
+FROM maven:3-openjdk-8 as build
 WORKDIR /workspace/app
 
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN ./mvnw install -DskipTests
+RUN mvn install
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM openjdk:8-jdk-alpine
